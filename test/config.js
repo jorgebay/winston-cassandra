@@ -8,7 +8,8 @@ var config = {
   "port": 9042,
   "username": "cassandra",
   "password": "cassandra",
-  "keyspace": "logging"
+  "keyspace": "logging",
+  "consistency": Cassandra.types.consistencies.one
 };
 
 if (fs.existsSync(path.resolve(__dirname, './localConfig.json'))) {

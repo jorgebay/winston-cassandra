@@ -9,11 +9,11 @@ var defaultOptions = {
   table: 'logs',
   //determines if the partition key is changed per day or hour
   partitionBy: 'day',
-  consistency: cql.types.consistencies.quorum
+  consistency: cql.types.consistencies.quorum,
+  level: 'info'
 };
 
 function Cassandra (options) {
-  this.name = 'cassandra';
   if (!options) {
     throw new Error('Transport options is required');
   }
@@ -21,6 +21,9 @@ function Cassandra (options) {
     throw new Error('You must specify the options.keyspace');
   }
   this.options = Cassandra.extend({}, defaultOptions, options);
+  //winston options
+  this.name = 'cassandra';
+  this.level = this.options.level;
   //create a queue object that will emit the event 'prepared'
   this.schemaStatus = new events.EventEmitter();
   this.schemaStatus.setMaxListeners(0);
@@ -30,27 +33,35 @@ function Cassandra (options) {
 util.inherits(Cassandra, winston.Transport);
 
 Cassandra.prototype.log = function (level, msg, meta, callback) {
+  var self = this;
   this._ensureSchema(function (err) {
     if (err) return callback(err, false);
-    return this._insertLog(level, msg, meta, function (err) {
+    return self._insertLog(level, msg, meta, function (err) {
       callback(err, !err);
     });
   });
 };
 
 /**
+ * Gets the log partition key
+ */
+Cassandra.prototype.getKey = function () {
+  if (this.options.partitionBy === 'day') {
+    return new Date().toISOString().slice(0, 10);
+  }
+  else if (this.options.partitionBy === 'hour') {
+    return new Date().toISOString().slice(0, 13);
+  }
+  return null;
+};
+
+/**
  * Inserts the log in the db
  */
 Cassandra.prototype._insertLog = function (level, msg, meta, callback) {
-  var key = null;
-  if (this.options.partitionBy === 'day') {
-    key = new Date().toISOString().slice(0, 10);
-  }
-  else if (this.options.partitionBy === 'hour') {
-    key = new Date().toISOString().slice(0, 13);
-  }
-  else {
-    return callback(new Error('Partition not supported'), false);
+  var key = this.getKey();
+  if (!key) {
+    return callback(new Error('Partition ' + this.options.partitionBy + ' not supported'), false);
   }
   return this.client.executeAsPrepared(
     'INSERT INTO ' + this.options.table + ' (key, date, level, message, meta) VALUES (?, ?, ?, ?, ?)',
@@ -86,7 +97,7 @@ Cassandra.prototype._ensureSchema = function (callback) {
  * Creates the Cassandra column family (table), if its not already created
  */
 Cassandra.prototype._createSchema = function (callback) {
-  var query = 'SELECT columnfamily_name FROM schema_columnfamilies WHERE keyspace_name=? AND columnfamily_name=?';
+  var query = 'SELECT columnfamily_name FROM system.schema_columnfamilies WHERE keyspace_name=? AND columnfamily_name=?';
   var params = [this.options.keyspace, this.options.table];
   var createQuery = 'CREATE TABLE ' + this.options.table +
     ' (key text, date timestamp, level text, message text, meta text, PRIMARY KEY(key, date));';
@@ -126,3 +137,4 @@ module.exports = Cassandra;
 //The rest of winston transports uses (module).name convention
 //Create a field to allow consumers to interact in the same way
 module.exports.Cassandra = Cassandra;
+module.exports.types = cql.types;
