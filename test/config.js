@@ -9,7 +9,8 @@ var config = {
   "username": "cassandra",
   "password": "cassandra",
   "keyspace": "logging",
-  "consistency": Cassandra.types.consistencies.one
+  "consistency": Cassandra.types.consistencies.one,
+  "level": "info"
 };
 
 if (fs.existsSync(path.resolve(__dirname, './localConfig.json'))) {

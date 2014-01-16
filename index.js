@@ -63,9 +63,10 @@ Cassandra.prototype._insertLog = function (level, msg, meta, callback) {
   if (!key) {
     return callback(new Error('Partition ' + this.options.partitionBy + ' not supported'), false);
   }
+  //execute as a prepared query as it would be executed multiple times
   return this.client.executeAsPrepared(
     'INSERT INTO ' + this.options.table + ' (key, date, level, message, meta) VALUES (?, ?, ?, ?, ?)',
-    [key, new Date(), level, msg, meta],
+    [key, new Date(), level, msg, util.inspect(meta)],
     this.options.consistency,
     callback);
 };

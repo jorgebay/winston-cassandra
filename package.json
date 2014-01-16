@@ -1,6 +1,6 @@
 ﻿{
   "name": "winston-cassandra",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cassandra transport for winston",
   "author": "Jorge Bay <jorgebaygondra@gmail.com>",
   "keywords": [
@@ -21,7 +21,8 @@
     "winston": ">= 0.7.2"
   },
   "devDependencies": {
-    "mocha": ">= 1.14.0"
+    "mocha": ">= 1.14.0",
+    "async": ">= 0.2.9"
   },
   "repository": { 
     "type" : "git", 
@@ -32,6 +33,6 @@
   },
   "engines": {"node" : ">=0.10.0"},
   "scripts": {
-    "test": "mocha test -R spec"
+    "test": "mocha test -R spec -t 5000"
   }
 }

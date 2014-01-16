@@ -1,6 +1,8 @@
 var assert = require('assert');
 //Node.js driver client class
 var CassandraClient = require('node-cassandra-cql').Client;
+var winston = require('winston');
+var async = require('async');
 //Transport class
 var Cassandra = require('../index.js');
 var config = require('./config.js');
@@ -8,13 +10,11 @@ var extend = Cassandra.extend;
 var cqlClient;
 
 before(function (done) {
-  this.timeout(5000);
   cqlClient = new CassandraClient(extend({}, config, {hosts: [config.host, config.host2], keyspace: null}));
   cqlClient.connect(done);
 });
 
 describe('Cassandra transport', function () {
-  this.timeout(5000);
   var cassandra = null;
   var options = extend({hosts: [config.host, config.host2]}, config);
 
@@ -84,6 +84,28 @@ describe('Cassandra transport', function () {
           assert.ok(!err, err);
           assert.strictEqual(result.rows.length, 2, 'Expected 2 rows, the table should not be recreated.');
           done();
+        });
+      });
+    });
+
+    it('should insert log from winston', function (done) {
+      assert.ok(winston.transports.Cassandra, 'Cassandra should be defined as transport when required');
+      var transport = new winston.transports.Cassandra(options);
+      var logger = new (winston.Logger)({
+        transports: [transport]
+      });
+      async.series([
+        function (next) {
+          logger.log('info', 'Through winston without meta', next);
+        },
+        function (next) {
+          logger.log('info', 'Through winston with meta', {val:1}, next);
+        }
+      ], function (err) {
+        cqlClient.execute(queryGetLogs, [cassandra.getKey()], config.consistency, function (err, result) {
+          assert.ok(!err, err);
+          assert.strictEqual(result.rows.length, 4, 'Expected 4 rows, total inserted so far');
+          done(err);
         });
       });
     });
