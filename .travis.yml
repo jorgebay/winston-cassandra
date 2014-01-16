@@ -12,4 +12,4 @@ branches:
     - stable
 
 before_script:
-  - sleep 3
+  - sleep 4
