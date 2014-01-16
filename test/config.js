@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var utils = require('../../node-cassandra-cql/src-master/lib/utils.js');
+var Cassandra = require('../index.js');
 
 var config = {
   "host": "localhost",
@@ -13,7 +13,7 @@ var config = {
 
 if (fs.existsSync(path.resolve(__dirname, './localConfig.json'))) {
   var localConfig = require('./localConfig.json');
-  utils.extend(config, localConfig);
+  Cassandra.extend(config, localConfig);
 }
 
 module.exports = config;
