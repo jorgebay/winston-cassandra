@@ -1,0 +1,37 @@
+﻿{
+  "name": "winston-cassandra",
+  "version": "0.1.0",
+  "description": "Cassandra transport for winston",
+  "author": "Jorge Bay <jorgebaygondra@gmail.com>",
+  "keywords": [
+    "cassandra",
+    "logging",
+    "log",
+    "transport",
+    "winston"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jorgebay/winston-cassandra/raw/master/LICENSE.txt"
+    }
+  ],
+  "dependencies": {
+    "node-cassandra-cql": ">= 0.4.0",
+    "winston": ">= 0.7.2"
+  },
+  "devDependencies": {
+    "mocha": ">= 1.14.0"
+  },
+  "repository": { 
+    "type" : "git", 
+    "url" : "https://github.com/jorgebay/winston-cassandra.git"
+  },
+  "bugs": { 
+    "url" : "https://github.com/jorgebay/winston-cassandra/issues"
+  },
+  "engines": {"node" : ">=0.10.0"},
+  "scripts": {
+    "test": "mocha test -R spec"
+  }
+}
