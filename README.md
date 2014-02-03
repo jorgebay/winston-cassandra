@@ -13,13 +13,13 @@ A Cassandra transport for [winston](https://github.com/flatiron/winston) logging
 ``` js
   var winston = require('winston');
 
-  // Add Cassandra transport (it also adds the field `winston.transports.Cassandra`)
+  // Adds a Cassandra transport (it also adds the field `winston.transports.Cassandra`)
   winston.add(require('winston-cassandra'), options);
 ```
 
 The Cassandra transport accepts the following options:
 
-* __level:__ Level of messages that this transport should log.
+* __level:__ Level of messages that this transport should log (default: `'info'`).
 * __table:__ The name of the Cassandra column family you wish your logs (default: `'logs'`).
 * __partitionBy:__ The name of the Cassandra column family you wish your logs. Possible values `'hour'` and `'day'`(Default).
 * __consistency:__ The consistency of the insert query (default: `quorum`).
