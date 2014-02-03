@@ -20,8 +20,8 @@ A Cassandra transport for [winston](https://github.com/flatiron/winston) logging
 The Cassandra transport accepts the following options:
 
 * __level:__ Level of messages that this transport should log (default: `'info'`).
-* __table:__ The name of the Cassandra column family you wish your logs (default: `'logs'`).
-* __partitionBy:__ The name of the Cassandra column family you wish your logs. Possible values `'hour'` and `'day'`(Default).
+* __table:__ The name of the Cassandra column family you want to store log messages in (default: `'logs'`).
+* __partitionBy:__ How you want the logs to be partitioned. Possible values `'hour'` and `'day'`(Default).
 * __consistency:__ The consistency of the insert query (default: `quorum`).
 
 In addition to the options accepted by the [Node.js Cassandra driver](https://github.com/jorgebay/node-cassandra-cql)
