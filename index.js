@@ -1,8 +1,8 @@
-﻿var util = require('util');
+var util = require('util');
 var events = require('events');
 
 var winston = require('winston');
-var cql = require('node-cassandra-cql');
+var cql = require('cassandra-driver');
 
 var defaultOptions = {
   //column family to store the logs
@@ -64,7 +64,7 @@ Cassandra.prototype._insertLog = function (level, msg, meta, callback) {
     return callback(new Error('Partition ' + this.options.partitionBy + ' not supported'), false);
   }
   //execute as a prepared query as it would be executed multiple times
-  return this.client.executeAsPrepared(
+  return this.client.execute(
     'INSERT INTO ' + this.options.table + ' (key, date, level, message, meta) VALUES (?, ?, ?, ?, ?)',
     [key, new Date(), level, msg, util.inspect(meta)],
     this.options.consistency,

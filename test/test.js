@@ -1,6 +1,6 @@
 var assert = require('assert');
 //Node.js driver client class
-var CassandraClient = require('node-cassandra-cql').Client;
+var CassandraClient = require('cassandra-driver').Client;
 var winston = require('winston');
 var async = require('async');
 //Transport class

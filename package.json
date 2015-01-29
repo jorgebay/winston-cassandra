@@ -17,18 +17,18 @@
     }
   ],
   "dependencies": {
-    "node-cassandra-cql": ">= 0.4.0",
+    "cassandra-driver": "^1.0.2",
     "winston": ">= 0.7.2"
   },
   "devDependencies": {
     "mocha": ">= 1.14.0",
     "async": ">= 0.2.9"
   },
-  "repository": { 
-    "type" : "git", 
+  "repository": {
+    "type" : "git",
     "url" : "https://github.com/jorgebay/winston-cassandra.git"
   },
-  "bugs": { 
+  "bugs": {
     "url" : "https://github.com/jorgebay/winston-cassandra/issues"
   },
   "engines": {"node" : ">=0.10.0"},
