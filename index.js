@@ -67,7 +67,7 @@ Cassandra.prototype._insertLog = function (level, msg, meta, callback) {
   return this.client.execute(
     'INSERT INTO ' + this.options.table + ' (key, date, level, message, meta) VALUES (?, ?, ?, ?, ?)',
     [key, new Date(), level, msg, util.inspect(meta)],
-    this.options.consistency,
+    {prepare: true, consistency: this.options.consistency},
     callback);
 };
 

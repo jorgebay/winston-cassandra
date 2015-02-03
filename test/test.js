@@ -10,13 +10,13 @@ var extend = Cassandra.extend;
 var cqlClient;
 
 before(function (done) {
-  cqlClient = new CassandraClient(extend({}, config, {hosts: [config.host, config.host2], keyspace: null}));
+  cqlClient = new CassandraClient(extend({}, config, {keyspace: null}));
   cqlClient.connect(done);
 });
 
 describe('Cassandra transport', function () {
   var cassandra = null;
-  var options = extend({hosts: [config.host, config.host2]}, config);
+  var options = extend({}, config);
 
   before(function () {
     cassandra = new Cassandra(options);
@@ -30,11 +30,11 @@ describe('Cassandra transport', function () {
 
     it('should fail if no keyspace specified', function () {
       assert.throws(function () {
-        new Cassandra({hosts: [config.host]});
+        new Cassandra({contactPoints: config.contactPoints});
       });
     });
 
-    it('should fail if no hosts specified', function () {
+    it('should fail if no contactPoints specified', function () {
       assert.throws(function () {
         new Cassandra({keyspace: 'dummy'});
       });
@@ -45,7 +45,7 @@ describe('Cassandra transport', function () {
 
     before(function (done) {
       //drop and re create the keyspace
-      cqlClient.execute('DROP KEYSPACE ' + config.keyspace, function (err) {
+      cqlClient.execute('DROP KEYSPACE ' + config.keyspace, function () {
         //ignore the error: the keyspace could not exist
         var query =
           "CREATE KEYSPACE " +
@@ -68,7 +68,7 @@ describe('Cassandra transport', function () {
       var logMessage = 'Inserting first message';
       cassandra.log('info', logMessage, 'meta 1', function (err) {
         assert.ok(!err, err);
-        cqlClient.execute(queryGetLogs, [cassandra.getKey()], config.consistency, function (err, result) {
+        cqlClient.execute(queryGetLogs, [cassandra.getKey()], {consistency: config.consistency}, function (err, result) {
           assert.ok(!err, err);
           assert.strictEqual(result.rows.length, 1, 'Expected 1 row');
           assert.strictEqual(result.rows[0].message, logMessage);
@@ -80,7 +80,7 @@ describe('Cassandra transport', function () {
     it('should not recreate the table if exists', function (done) {
       cassandra.log('info', 'Second message', 'meta 2', function (err) {
         assert.ok(!err, err);
-        cqlClient.execute(queryGetLogs, [cassandra.getKey()], config.consistency, function (err, result) {
+        cqlClient.execute(queryGetLogs, [cassandra.getKey()], {consistency: config.consistency}, function (err, result) {
           assert.ok(!err, err);
           assert.strictEqual(result.rows.length, 2, 'Expected 2 rows, the table should not be recreated.');
           done();
@@ -102,7 +102,8 @@ describe('Cassandra transport', function () {
           logger.log('info', 'Through winston with meta', {val:1}, next);
         }
       ], function (err) {
-        cqlClient.execute(queryGetLogs, [cassandra.getKey()], config.consistency, function (err, result) {
+        assert.ifError(err);
+        cqlClient.execute(queryGetLogs, [cassandra.getKey()], {consistency: config.consistency}, function (err, result) {
           assert.ok(!err, err);
           assert.strictEqual(result.rows.length, 4, 'Expected 4 rows, total inserted so far');
           done(err);

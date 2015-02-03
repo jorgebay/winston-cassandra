@@ -3,9 +3,7 @@ var path = require('path');
 var Cassandra = require('../index.js');
 
 var config = {
-  "contactPoints": ["localhost"],
-  "host": "localhost",
-  "host2": "localhost",
+  "contactPoints": ["127.0.0.1"],
   "port": 9042,
   "username": "cassandra",
   "password": "cassandra",

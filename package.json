@@ -1,6 +1,6 @@
 ﻿{
   "name": "winston-cassandra",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Cassandra transport for winston",
   "author": "Jorge Bay <jorgebaygondra@gmail.com>",
   "keywords": [
@@ -17,7 +17,7 @@
     }
   ],
   "dependencies": {
-    "cassandra-driver": "^1.0.2",
+    "cassandra-driver": ">= 1.0.3",
     "winston": ">= 0.7.2"
   },
   "devDependencies": {
