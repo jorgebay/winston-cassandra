@@ -24,16 +24,11 @@ The Cassandra transport accepts the following options:
 * __partitionBy:__ How you want the logs to be partitioned. Possible values `'hour'` and `'day'`(Default).
 * __consistency:__ The consistency of the insert query (default: `quorum`).
 
-In addition to the options accepted by the [Node.js Cassandra driver](https://github.com/jorgebay/node-cassandra-cql)
- [Client][0].
+In addition to the options accepted by the [Node.js Cassandra driver](https://github.com/datastax/nodejs-driver).
 
-* __hosts:__ Cluster nodes that will handle the write requests:
+* __contactPoints:__ Cluster nodes that will handle the write requests:
 Array of strings containing the hosts, for example `['host1', 'host2']` (required).
 * __keyspace:__ The name of the keyspace that will contain the logs table (required). The keyspace should be already created in the cluster.
-* __[...][0]__
 
 ## License
 Distributed under the [MIT license](https://github.com/jorgebay/winston-cassandra/blob/master/LICENSE.txt).
-
-
-[0]: https://github.com/jorgebay/node-cassandra-cql#client
