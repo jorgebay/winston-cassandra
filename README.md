@@ -24,6 +24,7 @@ The Cassandra transport accepts the following options:
 * __partitionBy:__ How you want the logs to be partitioned. Possible values `'hour'` and `'day'`(Default).
 * __consistency:__ The consistency of the insert query (default: `quorum`).
 * __name:__ Name of the transport.
+
 In addition to the options accepted by the [Node.js Cassandra driver](https://github.com/datastax/nodejs-driver).
 
 * __contactPoints:__ Cluster nodes that will handle the write requests:
