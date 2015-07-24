@@ -10,7 +10,8 @@ var defaultOptions = {
   //determines if the partition key is changed per day or hour
   partitionBy: 'day',
   consistency: cql.types.consistencies.quorum,
-  level: 'info'
+  level: 'info',
+  name: 'cassandra'
 };
 
 function Cassandra (options) {
@@ -22,7 +23,7 @@ function Cassandra (options) {
   }
   this.options = Cassandra.extend({}, defaultOptions, options);
   //winston options
-  this.name = 'cassandra';
+  this.name = this.options.name;
   this.level = this.options.level;
   //create a queue object that will emit the event 'prepared'
   this.schemaStatus = new events.EventEmitter();
