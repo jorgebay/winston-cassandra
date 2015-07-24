@@ -1,6 +1,6 @@
 {
   "name": "winston-cassandra",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Cassandra transport for winston",
   "author": "Jorge Bay <jorgebaygondra@gmail.com>",
   "keywords": [
@@ -25,14 +25,14 @@
     "async": ">= 0.2.9"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/jorgebay/winston-cassandra.git"
+    "type": "git",
+    "url": "https://github.com/jorgebay/winston-cassandra.git"
   },
   "bugs": {
-    "url" : "https://github.com/jorgebay/winston-cassandra/issues"
+    "url": "https://github.com/jorgebay/winston-cassandra/issues"
   },
   "engines": {
-    "node" : ">=0.10.0"
+    "node": ">=0.10.0"
   },
   "scripts": {
     "test": "mocha test -R spec -t 5000"
