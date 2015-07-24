@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "winston-cassandra",
   "version": "0.2.0",
   "description": "Cassandra transport for winston",
@@ -31,7 +31,9 @@
   "bugs": {
     "url" : "https://github.com/jorgebay/winston-cassandra/issues"
   },
-  "engines": {"node" : ">=0.10.0"},
+  "engines": {
+    "node" : ">=0.10.0"
+  },
   "scripts": {
     "test": "mocha test -R spec -t 5000"
   }
