@@ -1,9 +1,9 @@
 var assert = require('assert');
-//Node.js driver client class
+// Node.js driver client class
 var CassandraClient = require('cassandra-driver').Client;
 var winston = require('winston');
 var async = require('async');
-//Transport class
+// Transport class
 var Cassandra = require('../index.js');
 var config = require('./config.js');
 var extend = Cassandra.extend;
@@ -44,12 +44,12 @@ describe('Cassandra transport', function () {
     var queryGetLogs;
 
     before(function (done) {
-      //drop and re create the keyspace
+      // drop and re create the keyspace
       cqlClient.execute('DROP KEYSPACE ' + config.keyspace, function () {
-        //ignore the error: the keyspace could not exist
+        // ignore the error: the keyspace could not exist
         var query =
           "CREATE KEYSPACE " +
-          config.keyspace  +
+          config.keyspace +
           " WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 };";
         cqlClient.execute(query, done);
       });
@@ -57,7 +57,7 @@ describe('Cassandra transport', function () {
     });
 
     it('should fail if the keyspace does not exists', function (done) {
-      var temp = new Cassandra(extend({}, options, {'keyspace': 'logging_123456'}));
+      var temp = new Cassandra(extend({}, options, {keyspace: 'logging_123456'}));
       temp.log('info', 'message', 'metadata', function (err) {
         assert.ok(err, 'It should yield an error');
         done();
@@ -99,7 +99,7 @@ describe('Cassandra transport', function () {
           logger.log('info', 'Through winston without meta', next);
         },
         function (next) {
-          logger.log('info', 'Through winston with meta', {val:1}, next);
+          logger.log('info', 'Through winston with meta', {val: 1}, next);
         }
       ], function (err) {
         assert.ifError(err);

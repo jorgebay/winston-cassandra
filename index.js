@@ -5,16 +5,16 @@ var winston = require('winston');
 var cql = require('cassandra-driver');
 
 var defaultOptions = {
-  //column family to store the logs
+  // column family to store the logs
   table: 'logs',
-  //determines if the partition key is changed per day or hour
+  // determines if the partition key is changed per day or hour
   partitionBy: 'day',
   consistency: cql.types.consistencies.quorum,
   level: 'info',
   name: 'cassandra'
 };
 
-function Cassandra (options) {
+function Cassandra(options) {
   if (!options) {
     throw new Error('Transport options is required');
   }
@@ -22,10 +22,10 @@ function Cassandra (options) {
     throw new Error('You must specify the options.keyspace');
   }
   this.options = Cassandra.extend({}, defaultOptions, options);
-  //winston options
+  // winston options
   this.name = this.options.name;
   this.level = this.options.level;
-  //create a queue object that will emit the event 'prepared'
+  // create a queue object that will emit the event 'prepared'
   this.schemaStatus = new events.EventEmitter();
   this.schemaStatus.setMaxListeners(0);
   this.client = new cql.Client(this.options);
@@ -36,7 +36,9 @@ util.inherits(Cassandra, winston.Transport);
 Cassandra.prototype.log = function (level, msg, meta, callback) {
   var self = this;
   this._ensureSchema(function (err) {
-    if (err) return callback(err, false);
+    if (err) {
+      return callback(err, false);
+    }
     return self._insertLog(level, msg, meta, function (err) {
       callback(err, !err);
     });
@@ -49,8 +51,7 @@ Cassandra.prototype.log = function (level, msg, meta, callback) {
 Cassandra.prototype.getKey = function () {
   if (this.options.partitionBy === 'day') {
     return new Date().toISOString().slice(0, 10);
-  }
-  else if (this.options.partitionBy === 'hour') {
+  } else if (this.options.partitionBy === 'hour') {
     return new Date().toISOString().slice(0, 13);
   }
   return null;
@@ -64,7 +65,7 @@ Cassandra.prototype._insertLog = function (level, msg, meta, callback) {
   if (!key) {
     return callback(new Error('Partition ' + this.options.partitionBy + ' not supported'), false);
   }
-  //execute as a prepared query as it would be executed multiple times
+  // execute as a prepared query as it would be executed multiple times
   return this.client.execute(
     'INSERT INTO ' + this.options.table + ' (key, date, level, message, meta) VALUES (?, ?, ?, ?, ?)',
     [key, new Date(), level, msg, util.inspect(meta)],
@@ -77,7 +78,9 @@ Cassandra.prototype._insertLog = function (level, msg, meta, callback) {
  * If its already being created, it queues until it is created (or fails).
  */
 Cassandra.prototype._ensureSchema = function (callback) {
-  if (this.schemaStatus.err) return callback(this.schemaStatus.err);
+  if (this.schemaStatus.err) {
+    return callback(this.schemaStatus.err);
+  }
   if (this.schemaStatus.created) {
     return callback(null);
   }
@@ -105,7 +108,9 @@ Cassandra.prototype._createSchema = function (callback) {
     ' (key text, date timestamp, level text, message text, meta text, PRIMARY KEY(key, date));';
   var self = this;
   this.client.execute(query, params, function (err, result) {
-    if (err) return callback(err);
+    if (err) {
+      return callback(err);
+    }
     if (result.rows.length === 1) {
       self.schemaStatus.created = true;
       return callback();
@@ -133,10 +138,10 @@ Cassandra.extend = function (target) {
   return target;
 };
 
-//Define as a property of winston transports for backward compatibility
+// Define as a property of winston transports for backward compatibility
 winston.transports.Cassandra = Cassandra;
 module.exports = Cassandra;
-//The rest of winston transports uses (module).name convention
-//Create a field to allow consumers to interact in the same way
+// The rest of winston transports uses (module).name convention
+// Create a field to allow consumers to interact in the same way
 module.exports.Cassandra = Cassandra;
 module.exports.types = cql.types;

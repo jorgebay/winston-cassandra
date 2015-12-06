@@ -23,7 +23,8 @@
   },
   "devDependencies": {
     "async": "^1.4.2",
-    "mocha": "^2.3.3"
+    "mocha": "^2.3.3",
+    "xo": "^0.11.2"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,14 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha test -R spec -t 5000"
+    "test": "mocha test -R spec -t 5000",
+    "lint": "xo --space *.js --env=node --env=mocha"
+  },
+  "xo": {
+    "space": true,
+    "envs": [
+      "node",
+      "mocha"
+    ]
   }
 }
