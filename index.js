@@ -99,17 +99,18 @@ Cassandra.prototype._ensureSchema = function (callback) {
  * Creates the Cassandra column family (table), if its not already created
  */
 Cassandra.prototype._createSchema = function (callback) {
-  var query = 'SELECT table_name FROM system_schema.columns WHERE keyspace_name = ? AND table_name = ?;';
-  var params = [this.options.keyspace, this.options.table];
   var createQuery = 'CREATE TABLE ' + this.options.table +
     ' (key text, date timestamp, level text, message text, meta text, PRIMARY KEY(key, date));';
   var self = this;
-  this.client.execute(query, params, function (err, result) {
+
+  this.client.metadata.getTable(keyspace, table, function (err, tableInfo) {
     if (err) return callback(err);
-    if (result.rows.length === 1) {
+    if (tableInfo) {
+      //table is already created
       self.schemaStatus.created = true;
       return callback();
     }
+
     return self.client.execute(createQuery, function (err) {
       self.schemaStatus.created = !err;
       return callback(err);
