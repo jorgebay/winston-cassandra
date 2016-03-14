@@ -103,7 +103,7 @@ Cassandra.prototype._createSchema = function (callback) {
     ' (key text, date timestamp, level text, message text, meta text, PRIMARY KEY(key, date));';
   var self = this;
 
-  this.client.metadata.getTable(keyspace, table, function (err, tableInfo) {
+  this.client.metadata.getTable(this.options.keyspace, this.options.table, function (err, tableInfo) {
     if (err) return callback(err);
     if (tableInfo) {
       //table is already created
