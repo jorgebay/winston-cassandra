@@ -89,7 +89,8 @@ Cassandra.prototype._ensureSchema = function (callback) {
   return this.client.connect(function (err) {
     if (err) {
       self.schemaStatus.err = err;
-      return callback(self.schemaStatus.err);
+      self.client.shutdown();
+      return callback(err);
     }
     return self._createSchema(callback);
   });
